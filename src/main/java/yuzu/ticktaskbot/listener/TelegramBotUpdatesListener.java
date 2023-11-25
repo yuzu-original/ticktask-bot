@@ -17,11 +17,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
     @Autowired
-    private TelegramBot telegramBot;
+    private TelegramBot bot;
 
     @PostConstruct
     public void init() {
-        telegramBot.setUpdatesListener(this);
+        bot.setUpdatesListener(this);
     }
 
     @Override
