@@ -8,12 +8,15 @@ import jakarta.annotation.PostConstruct;
 import okhttp3.internal.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import yuzu.ticktaskbot.models.NotificationTask;
 import yuzu.ticktaskbot.service.NotificationTaskService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +60,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void sendNotifications() {
+        LocalDateTime dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        List<NotificationTask> tasks = service.findByDateTime(dateTime);
+        for (NotificationTask task : tasks) {
+            logger.info("Sending notification {}", task);
+            SendMessage request = new SendMessage(task.getChatId(), "Task notification: " + task.getText());
+            bot.execute(request);
+        }
+        service.deleteAll(tasks);
     }
 
     private void processStart(Update update) {

@@ -28,4 +28,12 @@ public class NotificationTaskService {
     public List<NotificationTask> findByChatId(Long chatId) {
         return repository.findAllByChatIdOrderByDateTime(chatId);
     }
+
+    public List<NotificationTask> findByDateTime(LocalDateTime dateTime) {
+        return repository.findAllByDateTime(dateTime);
+    }
+
+    public void deleteAll(List<NotificationTask> tasks) {
+        repository.deleteAll(tasks);
+    }
 }
