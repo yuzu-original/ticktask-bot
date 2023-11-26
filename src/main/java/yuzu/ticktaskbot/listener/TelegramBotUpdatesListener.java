@@ -89,6 +89,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         logger.info("Processing /all command");
         Long chatId = update.message().chat().id();
         List<NotificationTask> tasks = service.findByChatId(chatId);
+        if (tasks.isEmpty()) {
+            SendMessage request = new SendMessage(chatId, "You have no tasks :c");
+            bot.execute(request);
+            return;
+        }
         String text = tasks.stream()
                 .map(t -> t.getDateTime().format(dateTimeFormatter) + " " + t.getText())
                 .collect(Collectors.joining("\n"));
