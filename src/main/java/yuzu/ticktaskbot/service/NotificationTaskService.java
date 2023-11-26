@@ -1,5 +1,6 @@
 package yuzu.ticktaskbot.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import yuzu.ticktaskbot.models.NotificationTask;
 import yuzu.ticktaskbot.repository.NotificationTaskRepository;
@@ -35,5 +36,10 @@ public class NotificationTaskService {
 
     public void deleteAll(List<NotificationTask> tasks) {
         repository.deleteAll(tasks);
+    }
+
+    @Transactional
+    public void deleteOld(LocalDateTime dateTime) {
+        repository.deleteAllByDateTimeLessThan(dateTime);
     }
 }

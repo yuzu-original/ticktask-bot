@@ -10,4 +10,6 @@ public interface NotificationTaskRepository extends JpaRepository<NotificationTa
     List<NotificationTask> findAllByChatIdOrderByDateTime(Long chatId);
 
     List<NotificationTask> findAllByDateTime(LocalDateTime dateTime);
+
+    void deleteAllByDateTimeLessThan(LocalDateTime dateTime);
 }

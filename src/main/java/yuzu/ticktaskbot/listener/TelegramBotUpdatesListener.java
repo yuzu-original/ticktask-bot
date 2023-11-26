@@ -71,7 +71,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             SendMessage request = new SendMessage(task.getChatId(), "Task notification: " + task.getText());
             bot.execute(request);
         }
-        service.deleteAll(tasks);
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteOldNotifications() {
+        logger.info("Deleting old notifications");
+        service.deleteOld(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
     }
 
     private void processStart(Update update) {
